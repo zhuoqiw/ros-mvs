@@ -5,10 +5,10 @@ FROM ubuntu:20.04
 ARG TARGETPLATFORM
 
 # For amd64
-ARG MVS_AMD=https://github.com/zhuoqiw/ros-mvs/releases/download/untagged-a7d0cf35ffdd31d0e1f0/MVS-2.1.0_x86_64_20201228.tar.gz
+ARG MVS_AMD=https://github.com/zhuoqiw/ros-mvs/releases/download/v2.1.0/MVS-2.1.0_x86_64_20201228.tar.gz
 
 # For arm64
-ARG MVS_ARM=https://github.com/zhuoqiw/ros-mvs/releases/download/untagged-a7d0cf35ffdd31d0e1f0/MVS-2.1.0_aarch64_20201228.tar.gz
+ARG MVS_ARM=https://github.com/zhuoqiw/ros-mvs/releases/download/v2.1.0/MVS-2.1.0_aarch64_20201228.tar.gz
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
