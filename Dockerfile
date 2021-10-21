@@ -15,19 +15,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
   && rm -rf /var/lib/apt/lists/*
 
-# Download install files
+# Install
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   wget -O MVS.tar.gz ${MVS_AMD} --no-check-certificate; \
   elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
   wget -O MVS.tar.gz ${MVS_ARM} --no-check-certificate; \
-  else exit 1; fi
+  else exit 1; fi \
+  && mkdir MVS \
+  && tar -xzf MVS.tar.gz --strip-components=1 -C MVS \
+  && tar -xzf MVS/MVS.tar.gz -C /opt
+  && rm MVS.tar.gz MVS
 
-# Unzip install files
-RUN mkdir MVS \
-  && tar -xzf MVS.tar.gz --strip-components=1 -C MVS
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+  echo "/opt/MVS/lib/64" >> /etc/ld.so.conf.d/MVS.conf; \
+  elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+  echo "/opt/MVS/lib/aarch64" >> /etc/ld.so.conf.d/MVS.conf; \
+  else exit 1; fi \
+  && ldconfig
 
-# Unzip to /opt
-RUN tar -xzf MVS/MVS.tar.gz -C /opt
-
-# Remove temp files
-RUN rm MVS.tar.gz
