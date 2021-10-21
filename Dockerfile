@@ -24,7 +24,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   && mkdir MVS \
   && tar -xzf MVS.tar.gz --strip-components=1 -C MVS \
   && tar -xzf MVS/MVS.tar.gz -C /opt \
-  && rm MVS.tar.gz MVS
+  && rm -r MVS.tar.gz MVS
 
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   echo "/opt/MVS/lib/64" >> /etc/ld.so.conf.d/MVS.conf; \
