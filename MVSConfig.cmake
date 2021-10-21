@@ -1,0 +1,8 @@
+if(NOT TARGET MVS::MVS)
+  add_library(MVS::MVS SHARED IMPORTED)
+  set_target_properties(MVS::MVS PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "/opt/MVS/include"
+    IMPORTED_LOCATION "${CMAKE_CURRENT_LIST_DIR}/libMvCameraControl.so.3.1.3.0"
+    IMPORTED_NO_SONAME TRUE
+  )
+endif()

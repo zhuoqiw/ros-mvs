@@ -10,6 +10,9 @@ ARG MVS_AMD=https://github.com/zhuoqiw/ros-mvs/releases/download/v2.1.0/MVS-2.1.
 # For arm64
 ARG MVS_ARM=https://github.com/zhuoqiw/ros-mvs/releases/download/v2.1.0/MVS-2.1.0_aarch64_20201228.tar.gz
 
+# Copy cmake package files
+COPY MVSConfig.cmake MVSConfigVersion.cmake .
+
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
@@ -26,10 +29,17 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   && tar -xzf MVS/MVS.tar.gz -C /opt \
   && rm -r MVS.tar.gz MVS
 
+# Plug in cmake package files
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+  mv MVSConfig.cmake MVSConfigVersion.cmake /opt/MVS/lib/64/; \
+  elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+  mv MVSConfig.cmake MVSConfigVersion.cmake /opt/MVS/lib/aarch64/; \
+  else exit 1; fi
+
+# Update ldconfig
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   echo "/opt/MVS/lib/64" >> /etc/ld.so.conf.d/MVS.conf; \
   elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
   echo "/opt/MVS/lib/aarch64" >> /etc/ld.so.conf.d/MVS.conf; \
   else exit 1; fi \
   && ldconfig
-
