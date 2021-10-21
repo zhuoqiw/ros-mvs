@@ -23,7 +23,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   else exit 1; fi \
   && mkdir MVS \
   && tar -xzf MVS.tar.gz --strip-components=1 -C MVS \
-  && tar -xzf MVS/MVS.tar.gz -C /opt
+  && tar -xzf MVS/MVS.tar.gz -C /opt \
   && rm MVS.tar.gz MVS
 
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
