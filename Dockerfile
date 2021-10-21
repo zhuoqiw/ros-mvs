@@ -17,9 +17,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Download install files
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-  wget -O MVS.tar.gz ${MVS_AMD}; \
+  wget -O MVS.tar.gz ${MVS_AMD} --no-check-certificate; \
   elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-  wget -O MVS.tar.gz ${MVS_ARM}; \
+  wget -O MVS.tar.gz ${MVS_ARM} --no-check-certificate; \
   else exit 1; fi
 
 # Unzip install files
