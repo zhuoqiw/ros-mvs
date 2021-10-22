@@ -1,5 +1,5 @@
 # Install galaxy on ROS
-FROM ubuntu:20.04
+FROM ros:galactic
 
 # linux/amd64 or linux/arm64
 ARG TARGETPLATFORM
@@ -29,17 +29,16 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   && tar -xzf MVS/MVS.tar.gz -C /opt \
   && rm -r MVS.tar.gz MVS
 
-# Plug in cmake package files
+# Move libraries out of arch and plug in cmake package files
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-  mv MVSConfig.cmake MVSConfigVersion.cmake /opt/MVS/lib/64/; \
+  mv /opt/MVS/lib/64/* /opt/MVS/lib \
+  && rm -r /opt/MVS/lib/32 /opt/MVS/lib/64; \
   elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-  mv MVSConfig.cmake MVSConfigVersion.cmake /opt/MVS/lib/aarch64/; \
-  else exit 1; fi
+  mv /opt/MVS/lib/aarch64/* /opt/MVS/lib \
+  && rm -r /opt/MVS/lib/aarch64; \
+  else exit 1; fi \
+  && mv MVSConfig.cmake MVSConfigVersion.cmake /opt/MVS
 
 # Update ldconfig
-RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-  echo "/opt/MVS/lib/64" >> /etc/ld.so.conf.d/MVS.conf; \
-  elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-  echo "/opt/MVS/lib/aarch64" >> /etc/ld.so.conf.d/MVS.conf; \
-  else exit 1; fi \
+RUN echo "/opt/MVS/lib" >> /etc/ld.so.conf.d/MVS.conf \
   && ldconfig
