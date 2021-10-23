@@ -13,39 +13,43 @@ defaults:
     shell: bash
 
 jobs:
-  build-ros-mvs-image:
-    name: Build ros MVS image
-    runs-on: ubuntu-20.04
+  check-Dockerfile-changed:
+    name: Check Dockerfile changed or not
+    runs-on: ubuntu-latest
+    outputs:
+      any_changed: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       -
         name: Check out repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          fetch-depth: 0
       -
         name: Get specific changed files
         id: changed-files
         uses: tj-actions/changed-files@v9
         with:
           files: Dockerfile
+  build-ros-mvs-image:
+    name: Build ros MVS image
+    needs: check-Dockerfile-changed
+    runs-on: ubuntu-latest
+    if: needs.check-Dockerfile-changed.outputs.any_changed
+    steps:
       -
         name: Set up QEMU
-        if: steps.changed-files.outputs.any_changed == 'true'
         uses: docker/setup-qemu-action@v1
       -
         name: Set up Docker Buildx
-        if: steps.changed-files.outputs.any_changed == 'true'
         uses: docker/setup-buildx-action@v1
       -
         name: Login to DockerHub
-        if: steps.changed-files.outputs.any_changed == 'true'
         uses: docker/login-action@v1 
         with:
           username: ${{ secrets.DOCKER_HUB_USER_NAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       -
         name: Build and push
-        if: steps.changed-files.outputs.any_changed == 'true'
         uses: docker/build-push-action@v2
         with:
           platforms: linux/amd64,linux/arm64
