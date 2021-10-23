@@ -1,4 +1,4 @@
-# Install galaxy on ROS
+# Install MVS on ROS
 FROM ros:galactic
 
 # linux/amd64 or linux/arm64
