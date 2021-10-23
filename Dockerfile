@@ -1,5 +1,5 @@
 # Install MVS on ROS
-FROM ros:galactic
+FROM ros:foxy
 
 # linux/amd64 or linux/arm64
 ARG TARGETPLATFORM
