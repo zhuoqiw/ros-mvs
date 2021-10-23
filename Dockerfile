@@ -1,7 +1,7 @@
 # Install galaxy on ROS
 FROM ros:galactic
 
-# linux/amd64 or linux/arm64/v8
+# linux/amd64 or linux/arm64
 ARG TARGETPLATFORM
 
 # For amd64
@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   wget -O MVS.tar.gz ${MVS_AMD} --no-check-certificate; \
-  elif [ "$TARGETPLATFORM" = "linux/arm64/v8" ]; then \
+  elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
   wget -O MVS.tar.gz ${MVS_ARM} --no-check-certificate; \
   else exit 1; fi \
   && mkdir MVS \
@@ -33,7 +33,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   mv /opt/MVS/lib/64/* /opt/MVS/lib \
   && rm -r /opt/MVS/lib/32 /opt/MVS/lib/64; \
-  elif [ "$TARGETPLATFORM" = "linux/arm64/v8" ]; then \
+  elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
   mv /opt/MVS/lib/aarch64/* /opt/MVS/lib \
   && rm -r /opt/MVS/lib/aarch64; \
   else exit 1; fi \
