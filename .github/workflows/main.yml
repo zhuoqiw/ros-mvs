@@ -13,11 +13,11 @@ defaults:
     shell: bash
 
 jobs:
-  check:
-    name: Check Dockerfile changed or not
+  job1:
+    name: Check Dockerfile
     runs-on: ubuntu-latest
     outputs:
-      any_changed: ${{ steps.changed-files.outputs.any_changed }}
+      any_changed: ${{ steps.changed.outputs.any_changed }}
     steps:
       -
         name: Check out repository
@@ -26,17 +26,16 @@ jobs:
           fetch-depth: 0
       -
         name: Get specific changed files
-        id: changed-files
+        id: changed
         uses: tj-actions/changed-files@v9
         with:
           files: Dockerfile
-  build:
-    name: Build ros MVS image
-    needs: check
+  job2:
+    name: Build image
+    needs: job1
     runs-on: ubuntu-latest
-    if: needs.check.outputs.any_changed
+    if: needs.job1.outputs.any_changed
     steps:
-      - run: echo ${{ needs.check.outputs.any_changed }}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
