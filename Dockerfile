@@ -1,7 +1,7 @@
 # Install galaxy on ROS
 FROM ros:galactic
 
-# linux/amd64 or linux/arm64
+# linux/amd64 or linux/arm64/v8
 ARG TARGETPLATFORM
 
 # For amd64
@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   wget -O MVS.tar.gz ${MVS_AMD} --no-check-certificate; \
-  elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+  elif [ "$TARGETPLATFORM" = "linux/arm64/v8" ]; then \
   wget -O MVS.tar.gz ${MVS_ARM} --no-check-certificate; \
   else exit 1; fi \
   && mkdir MVS \
@@ -29,11 +29,11 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   && tar -xzf MVS/MVS.tar.gz -C /opt \
   && rm -r MVS.tar.gz MVS
 
-# Move libraries out of arch and plug in cmake package files
+# Move libraries out of <arch> and plug in cmake package files
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   mv /opt/MVS/lib/64/* /opt/MVS/lib \
   && rm -r /opt/MVS/lib/32 /opt/MVS/lib/64; \
-  elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+  elif [ "$TARGETPLATFORM" = "linux/arm64/v8" ]; then \
   mv /opt/MVS/lib/aarch64/* /opt/MVS/lib \
   && rm -r /opt/MVS/lib/aarch64; \
   else exit 1; fi \
