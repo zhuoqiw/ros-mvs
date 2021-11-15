@@ -35,7 +35,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   && echo "/opt/MVS/lib/64" >> /etc/ld.so.conf.d/MVS.conf \
   elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
   mv MVSConfigArm64.cmake /opt/MVS/MVSConfig.cmake \
-  && "/opt/MVS/lib/aarch64" >> /etc/ld.so.conf.d/MVS.conf \
+  && echo "/opt/MVS/lib/aarch64" >> /etc/ld.so.conf.d/MVS.conf \
   else exit 1; fi \
   && mv MVSConfigVersion.cmake /opt/MVS \
   && ldconfig \
