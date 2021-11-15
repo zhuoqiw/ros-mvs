@@ -11,7 +11,7 @@ ARG MVS_AMD=https://github.com/zhuoqiw/ros-mvs/releases/download/v2.1.0/MVS-2.1.
 ARG MVS_ARM=https://github.com/zhuoqiw/ros-mvs/releases/download/v2.1.0/MVS-2.1.0_aarch64_20201228.tar.gz
 
 # Copy cmake package files
-COPY MVSConfig.cmake MVSConfigVersion.cmake .
+COPY MVSConfig.cmake MVSConfigVersion.cmake ./
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -25,8 +25,8 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   wget -O MVS.tar.gz ${MVS_ARM} --no-check-certificate; \
   else exit 1; fi \
   && mkdir MVS \
-  && tar -xzf MVS.tar.gz --strip-components=1 -C MVS \
-  && tar -xzf MVS/MVS.tar.gz -C /opt \
+  && tar -xzf MVS.tar.gz --strip-components=1 --directory=MVS \
+  && tar -xzf MVS/MVS.tar.gz --directory=/opt \
   && rm -r MVS.tar.gz MVS
 
 # Move libraries out of <arch> and plug in cmake package files
